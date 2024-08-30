@@ -2,6 +2,7 @@
 using LLI.Models;
 using LLI.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Net;
 using System.Numerics;
 
@@ -41,5 +42,38 @@ namespace LLI.Controllers
 
             return View();
         }
+
+
+        [HttpGet]
+        public async Task<IActionResult> List()
+        {
+            var resident = await dbContext.BrgyInformation.ToListAsync();
+
+            return View(resident);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            var resident = await dbContext.BrgyInformation.FindAsync(id);
+
+            return View(resident);
+        }
+
+
+
+
+
+
+
+
+
     }
+
+        
+
+
+
+
+
 }
