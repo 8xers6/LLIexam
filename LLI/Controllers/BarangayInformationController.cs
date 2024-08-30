@@ -1,6 +1,7 @@
 ﻿using LLI.Data;
 using LLI.Models;
 using LLI.Models.Entities;
+using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
@@ -60,6 +61,24 @@ namespace LLI.Controllers
             return View(resident);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Edit(BarangayInformation viewModel)
+        {
+            var resident = await dbContext.BrgyInformation.FindAsync(viewModel.Id);
+            if(resident is not null){
+
+                resident.Name = viewModel.Name;
+                resident.Birthday = viewModel.Birthday;
+                resident.Address = viewModel.Address;
+                resident.Phone = viewModel.Phone;
+                resident.EmergencyContactName = viewModel.EmergencyContactName;
+                resident.EmergencyContact = viewModel.EmergencyContact;
+                resident.Email = viewModel.Email;
+
+                await dbContext.SaveChangesAsync();
+            }
+            return RedirectToAction("List", "BarangayInformation");
+        }
 
 
 

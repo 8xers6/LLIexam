@@ -33,7 +33,7 @@
         <td>@BarangayInformation.EmergencyContactName</td>
         <td>@BarangayInformation.EmergencyContact</td>
         <td>@BarangayInformation.Email</td>
-        <td><a class="btn btn-primary">Edit</a></td>
+        <td><a class="btn btn-primary" asp-controller="BarangayInformation" asp-action="Edit" asp-route-id="@BarangayInformation.Id">Edit</a></td>
          }
     </tbody>
 </table>

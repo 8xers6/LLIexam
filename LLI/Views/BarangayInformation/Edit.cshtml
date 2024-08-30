@@ -6,6 +6,12 @@
 @model LLI.Models.Entities.BarangayInformation
 
 <h1>Edit Barangay Resident</h1>
+
+@if(Model is null)
+{
+    <p>No Resident Data Found!</p>
+}
+else{
 <form method="post">
 
     <div class="mt-3">
@@ -46,4 +52,4 @@
 
 </form>
 
-
+}
