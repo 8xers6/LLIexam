@@ -41,7 +41,7 @@ namespace LLI.Controllers
             await dbContext.SaveChangesAsync();
 
 
-            return View();
+            return RedirectToAction("List", "BarangayInformation");
         }
 
 
@@ -81,13 +81,22 @@ namespace LLI.Controllers
         }
 
 
+        [HttpPost]
+        public async Task<IActionResult> Delete(BarangayInformation viewModel)
+        {
+
+            var resident = await dbContext.BrgyInformation.AsNoTracking().FirstOrDefaultAsync(x=>x.Id==viewModel.Id);
+            if (resident is not null) {
+                dbContext.BrgyInformation.Remove(viewModel);
+                await dbContext.SaveChangesAsync();
+            }
+            return RedirectToAction("List", "BarangayInformation");
+        }
 
 
 
 
-
-
-    }
+     }
 
         
 
