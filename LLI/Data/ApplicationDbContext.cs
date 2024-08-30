@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using LLI.Models.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace LLI.Data
 {
@@ -9,7 +10,7 @@ namespace LLI.Data
             
         }
 
-
+        public DbSet<BarangayInformation> BrgyInformation { get; set; }
 
     }
 }
