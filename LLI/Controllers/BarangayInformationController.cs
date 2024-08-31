@@ -1,6 +1,8 @@
 ﻿using LLI.Data;
 using LLI.Models;
 using LLI.Models.Entities;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -95,8 +97,22 @@ namespace LLI.Controllers
 
 
 
+        [HttpPost]
+        [ValidateAntiForgeryToken] // Optional: Protect against CSRF attacks
+        public async Task<IActionResult> Logout()
+        {
+            // Sign the user out of the authentication scheme
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
-     }
+            // Redirect to the login page after logout
+            return RedirectToAction("Account", "Login");
+        }
+
+
+
+
+
+    }
 
         
 

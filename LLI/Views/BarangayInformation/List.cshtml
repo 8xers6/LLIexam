@@ -1,14 +1,20 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
-@model List<LLI.Models.Entities.BarangayInformation>
+﻿@model List<LLI.Models.Entities.BarangayInformation>
 
+<!-- Header with Logout Button -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Resident List</h1>
 
-<h1>Resident List</h1>
+    <!-- Logout Button -->
+    <form asp-controller="Account" asp-action="Logout" method="post" class="form-inline">
+        <button type="submit" class="btn btn-link">Logout</button>
+    </form>
+</div>
+
+<!-- Add New Resident Button -->
 <td><a class="btn btn-secondary" asp-controller="BarangayInformation" asp-action="Add">Add New Resident</a></td>
 <br />
+
+<!-- Table of Residents -->
 <table class="table table-bordered">
     <thead class="thead-dark">
         <tr>
@@ -27,15 +33,17 @@
         @foreach (var BarangayInformation in Model)
         {
             <tr>
-        <td>@BarangayInformation.Id</td>
-        <td>@BarangayInformation.Name</td>
-        <td>@BarangayInformation.Birthday</td>
-        <td>@BarangayInformation.Address</td>
-        <td>@BarangayInformation.Phone</td>
-        <td>@BarangayInformation.EmergencyContactName</td>
-        <td>@BarangayInformation.EmergencyContact</td>
-        <td>@BarangayInformation.Email</td>
-        <td><a class="btn btn-primary" asp-controller="BarangayInformation" asp-action="Edit" asp-route-id="@BarangayInformation.Id">Edit</a></td>
+                <td>@BarangayInformation.Id</td>
+                <td>@BarangayInformation.Name</td>
+                <td>@BarangayInformation.Birthday</td>
+                <td>@BarangayInformation.Address</td>
+                <td>@BarangayInformation.Phone</td>
+                <td>@BarangayInformation.EmergencyContactName</td>
+                <td>@BarangayInformation.EmergencyContact</td>
+                <td>@BarangayInformation.Email</td>
+                <td>
+                    <a class="btn btn-primary" asp-controller="BarangayInformation" asp-action="Edit" asp-route-id="@BarangayInformation.Id">Edit</a>
+                </td>
             </tr>
         }
     </tbody>
