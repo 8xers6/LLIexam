@@ -1,5 +1,13 @@
 ﻿@model List<LLI.Models.Entities.BarangayInformation>
-
+@{
+    var welcomeMessage = TempData["WelcomeMessage"] as string;
+}
+@if (!string.IsNullOrEmpty(welcomeMessage))
+{
+    <div class="alert alert-success">
+        @welcomeMessage
+    </div>
+}
 <!-- Header with Logout Button -->
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1>Resident List</h1>

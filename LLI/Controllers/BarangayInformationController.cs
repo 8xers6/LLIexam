@@ -1,16 +1,13 @@
 ﻿using LLI.Data;
 using LLI.Models;
 using LLI.Models.Entities;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Net;
-using System.Numerics;
 
 namespace LLI.Controllers
 {
+    [Authorize]
     public class BarangayInformationController : Controller
     {
         private readonly ApplicationDbContext dbContext;
@@ -25,6 +22,7 @@ namespace LLI.Controllers
         {
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> Add(AddResidentViewModel viewModel)
         {
@@ -42,16 +40,13 @@ namespace LLI.Controllers
             await dbContext.BrgyInformation.AddAsync(resident);
             await dbContext.SaveChangesAsync();
 
-
             return RedirectToAction("List", "BarangayInformation");
         }
-
 
         [HttpGet]
         public async Task<IActionResult> List()
         {
             var resident = await dbContext.BrgyInformation.ToListAsync();
-
             return View(resident);
         }
 
@@ -59,7 +54,6 @@ namespace LLI.Controllers
         public async Task<IActionResult> Edit(Guid id)
         {
             var resident = await dbContext.BrgyInformation.FindAsync(id);
-
             return View(resident);
         }
 
@@ -67,8 +61,8 @@ namespace LLI.Controllers
         public async Task<IActionResult> Edit(BarangayInformation viewModel)
         {
             var resident = await dbContext.BrgyInformation.FindAsync(viewModel.Id);
-            if(resident is not null){
-
+            if (resident is not null)
+            {
                 resident.Name = viewModel.Name;
                 resident.Birthday = viewModel.Birthday;
                 resident.Address = viewModel.Address;
@@ -82,42 +76,16 @@ namespace LLI.Controllers
             return RedirectToAction("List", "BarangayInformation");
         }
 
-
         [HttpPost]
         public async Task<IActionResult> Delete(BarangayInformation viewModel)
         {
-
-            var resident = await dbContext.BrgyInformation.AsNoTracking().FirstOrDefaultAsync(x=>x.Id==viewModel.Id);
-            if (resident is not null) {
+            var resident = await dbContext.BrgyInformation.AsNoTracking().FirstOrDefaultAsync(x => x.Id == viewModel.Id);
+            if (resident is not null)
+            {
                 dbContext.BrgyInformation.Remove(viewModel);
                 await dbContext.SaveChangesAsync();
             }
             return RedirectToAction("List", "BarangayInformation");
         }
-
-
-
-        [HttpPost]
-        [ValidateAntiForgeryToken] // Optional: Protect against CSRF attacks
-        public async Task<IActionResult> Logout()
-        {
-            // Sign the user out of the authentication scheme
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-
-            // Redirect to the login page after logout
-            return RedirectToAction("Account", "Login");
-        }
-
-
-
-
-
     }
-
-        
-
-
-
-
-
 }

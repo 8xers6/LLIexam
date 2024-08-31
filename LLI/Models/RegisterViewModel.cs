@@ -1,18 +1,19 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LLI.Models
 {
     public class RegisterViewModel
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+
         [Required]
-        public string username { get; set; }
+        [StringLength(100, ErrorMessage = "Username cannot be longer than 100 characters.")]
+        public string Username { get; set; }
+
         [Required]
         [DataType(DataType.Password)]
-        public string password { get; set; }
-
+        [StringLength(100, MinimumLength = 6, ErrorMessage = "Password must be at least 6 characters long.")]
+        public string Password { get; set; }
     }
 }

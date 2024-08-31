@@ -1,22 +1,75 @@
-﻿
-@model RegisterViewModel
-<h2>Login</h2>
+﻿@model RegisterViewModel
 
-<form asp-controller="Account" asp-action="Login" method="post">
-    <div asp-validation-summary="ModelOnly" class="text-danger">    </div>
-    <div class="form-group">
-        <label asp-for="username"></label>
-        <input asp-for="username" class="form-control" />
-        <span asp-validation-for="username" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="password"></label>
-        <input asp-for="password" class="form-control" />
-        <span asp-validation-for="password" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <button type="submit">Login</button>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Login</title>
+    <!-- Assuming you have Bootstrap included in your project -->
+    <link rel="stylesheet" href="~/css/bootstrap.min.css" />
+    <style>
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+            .login-container h2 {
+                margin-bottom: 20px;
+            }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+            .btn-primary:hover {
+                background-color: #0056b3;
+                border-color: #004085;
+            }
+
+        .register-link {
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="login-container">
+            <h2 class="text-center">Login</h2>
+
+            <form asp-controller="Account" asp-action="Login" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                <div class="form-group">
+                    <label asp-for="Username" class="form-label"></label>
+                    <input asp-for="Username" class="form-control" placeholder="Username" />
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Password" class="form-label"></label>
+                    <input asp-for="Password" class="form-control" type="password" placeholder="Password" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="form-group text-center">
+                    <br />
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </div>
+                <div class="register-link">
+                    <a asp-controller="Account" asp-action="Register">Don't have an account? Register here</a>
+                </div>
+            </form>
+        </div>
     </div>
 
+    <!-- Include jQuery, Popper.js, and Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
 
-</form>
+    <!-- If bootstrap.min.js is not working, use the CDN link below -->
+    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
+</body>
+</html>

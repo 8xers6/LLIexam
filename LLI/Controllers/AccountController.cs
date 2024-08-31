@@ -3,46 +3,50 @@ using LLI.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using NuGet.Protocol;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace LLI.Controllers
 {
-    
     public class AccountController : Controller
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
         private readonly ApplicationDbContext _context;
+        private readonly PasswordHasher<RegisterViewModel> _passwordHasher;
+
         public AccountController(ApplicationDbContext context)
         {
             _context = context;
+            _passwordHasher = new PasswordHasher<RegisterViewModel>();
         }
 
+        [HttpGet]
         public IActionResult Register()
         {
             return View(new RegisterViewModel());
         }
+
         [HttpPost]
-        public IActionResult Register(RegisterViewModel users)
+        public IActionResult Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
-                _context.users.Add(users);
+                // Hash the password before saving
+                model.Password = _passwordHasher.HashPassword(model, model.Password);
+
+                _context.users.Add(model);
                 _context.SaveChanges();
-                return RedirectToAction("Login","Account"); 
+                return RedirectToAction("Login", "Account");
             }
-            return View(users);
+
+            return View(model);
         }
 
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Login()
         {
-            // If the user is already authenticated, redirect them to a different page
             if (User.Identity.IsAuthenticated)
             {
                 return RedirectToAction("List", "BarangayInformation");
@@ -57,33 +61,42 @@ namespace LLI.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = _context.users.FirstOrDefault(u => u.username == model.username);
-                if (user != null && user.password == model.password)
+                var user = _context.users.FirstOrDefault(u => u.Username == model.Username);
+                if (user != null)
                 {
-                    // Sign in the user using authentication
-                    // This is an example; you'll need to implement the actual authentication logic
-                    var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, user.username),
-                // Add other claims here as needed
-            };
-                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                    var authProperties = new AuthenticationProperties
-                    {
-                        // Optionally set properties like IsPersistent, ExpiresUtc, etc.
-                    };
-                    HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
+                    // Verify the hashed password
+                    var result = _passwordHasher.VerifyHashedPassword(model, user.Password, model.Password);
 
-                    return RedirectToAction("List", "BarangayInformation");
+                    if (result == PasswordVerificationResult.Success)
+                    {
+                        var claims = new List<Claim>
+                        {
+                            new Claim(ClaimTypes.Name, user.Username),
+                        };
+                        var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                        var authProperties = new AuthenticationProperties { };
+
+                        HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
+
+                        // Set welcome message in TempData
+                        TempData["WelcomeMessage"] = $"Welcome, {user.Username}!";
+
+                        return RedirectToAction("List", "BarangayInformation");
+                    }
                 }
-                else
-                {
-                    ModelState.AddModelError("", "Invalid username or password.");
-                    return View();
-                }
+
+                ModelState.AddModelError("", "Invalid username or password.");
             }
 
             return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Login", "Account");
         }
     }
 }

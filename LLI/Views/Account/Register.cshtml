@@ -8,13 +8,13 @@
 
 <form asp-controller="Account" asp-action="Register" method="post">
 
-    <label asp-for="username">username</label>
-    <input asp-for="username" class="form-control" id="username" name="username" />
-    <span asp-validation-for="username" class="text-danger"></span>
+    <label asp-for="Username">Username</label>
+    <input asp-for="Username" class="form-control" id="username" name="username" />
+    <span asp-validation-for="Username" class="text-danger"></span>
 
-    <label asp-for="username">password</label>
-    <input type="password" asp-for="password" class="form-control" id="password" name="password" />
-    <span asp-validation-for="password" class="text-danger"></span>
+    <label asp-for="Password">Password</label>
+    <input type="password" asp-for="Password" class="form-control" id="password" name="password" />
+    <span asp-validation-for="Password" class="text-danger"></span>
 
     <button type="submit" >Register</button>
 
