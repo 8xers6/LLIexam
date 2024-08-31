@@ -14,6 +14,6 @@ namespace LLI.Data
         public DbSet<BarangayInformation> BrgyInformation { get; set; }
 
 
-        public DbSet<RegisterViewModel> users { get; set; }
+        public DbSet<RegisterViewModel> Users { get; set; }
     }
 }

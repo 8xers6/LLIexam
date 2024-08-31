@@ -2,28 +2,35 @@
 @{
     var welcomeMessage = TempData["WelcomeMessage"] as string;
 }
+
+<!-- Display the welcome message if it exists -->
 @if (!string.IsNullOrEmpty(welcomeMessage))
 {
     <div class="alert alert-success">
         @welcomeMessage
     </div>
 }
+
+<form action="@Url.Action("ExportToExcel", "BarangayInformation")" method="post">
+    <button type="submit" class="btn btn-primary">Export to Excel</button>
+</form>
 <!-- Header with Logout Button -->
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1>Resident List</h1>
 
     <!-- Logout Button -->
-    <form asp-controller="Account" asp-action="Logout" method="post" class="form-inline">
+    <form asp-controller="BarangayInformation" asp-action="Logout" method="post" class="form-inline">
         <button type="submit" class="btn btn-link">Logout</button>
     </form>
 </div>
 
 <!-- Add New Resident Button -->
-<td><a class="btn btn-secondary" asp-controller="BarangayInformation" asp-action="Add">Add New Resident</a></td>
-<br />
+<div class="mb-3">
+    <a class="btn btn-secondary" asp-controller="BarangayInformation" asp-action="Add">Add New Resident</a>
+</div>
 
 <!-- Table of Residents -->
-<table class="table table-bordered">
+<table class="table table-bordered" id="dataTable">
     <thead class="thead-dark">
         <tr>
             <th>Id</th>
@@ -56,3 +63,5 @@
         }
     </tbody>
 </table>
+
+

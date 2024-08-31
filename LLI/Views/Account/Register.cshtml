@@ -1,24 +1,50 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model RegisterViewModel
 @{
+    var successMessage = TempData["SuccessMessage"] as string;
 }
-@model RegisterViewModel
-<h1>Sign Up pages</h1>
+@if (!string.IsNullOrEmpty(successMessage))
+{
+    <div class="alert alert-success">
+        @successMessage
+    </div>
+}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <h1 class="text-center mb-4">Sign Up</h1>
 
-<form asp-controller="Account" asp-action="Register" method="post">
+            <form asp-controller="Account" asp-action="Register" method="post">
+                <div class="form-group">
+                    <label asp-for="username" class="control-label">Username</label>
+                    <input asp-for="username" class="form-control" id="username" placeholder="Enter your username" />
+                    <span asp-validation-for="username" class="text-danger"></span>
+                </div>
 
-    <label asp-for="Username">Username</label>
-    <input asp-for="Username" class="form-control" id="username" name="username" />
-    <span asp-validation-for="Username" class="text-danger"></span>
+                <div class="form-group mt-3">
+                    <label asp-for="password" class="control-label">Password</label>
+                    <input type="password" asp-for="password" class="form-control" id="password" placeholder="Enter your password" />
+                    <span asp-validation-for="password" class="text-danger"></span>
+                </div>
 
-    <label asp-for="Password">Password</label>
-    <input type="password" asp-for="Password" class="form-control" id="password" name="password" />
-    <span asp-validation-for="Password" class="text-danger"></span>
+                <div class="form-group mt-3">
+                    <label for="confirmPassword" class="control-label">Confirm Password</label>
+                    <input type="password" name="confirmPassword" class="form-control" id="confirmPassword" placeholder="Confirm your password" />
+                    <span class="text-danger">
+                        @if (ViewData.ModelState.ContainsKey("ConfirmPassword"))
+                        {
+                            <text>@ViewData.ModelState["ConfirmPassword"].Errors.FirstOrDefault()?.ErrorMessage</text>
+                        }
+                    </span>
+                </div>
 
-    <button type="submit" >Register</button>
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-primary w-100">Register</button>
+                </div>
 
-
-
-
-</form>
+                <div class="text-center mt-3">
+                    <p class="mb-0">Already have an account? <a href="@Url.Action("Login", "Account")">Login here</a>.</p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,7 +1,6 @@
 using LLI.Data;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,12 +13,14 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.LoginPath = "/Account/Login"; // Redirect to login page if unauthorized
-        options.LogoutPath = "/Account/Logout"; // Optional: Configure logout path
-        options.AccessDeniedPath = "/Account/AccessDenied"; // Optional: Access denied page
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(60); // Optional: Set cookie expiration
-        options.SlidingExpiration = true; // Optional: Refresh cookie lifetime with each request
+        options.LoginPath = "/Account/Login";
+        options.LogoutPath = "/Account/Logout";
+        options.AccessDeniedPath = "/Account/AccessDenied";
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+        options.SlidingExpiration = true;
     });
+
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -33,8 +34,17 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-// Enable Authentication Middleware
-app.UseAuthentication(); // This should come before UseAuthorization
+// Add middleware to prevent caching of sensitive pages
+app.Use(async (context, next) =>
+{
+    context.Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
+    context.Response.Headers["Pragma"] = "no-cache";
+    context.Response.Headers["Expires"] = "0";
+    await next();
+});
+
+// Enable Authentication and Authorization Middleware
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
