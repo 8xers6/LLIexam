@@ -47,11 +47,12 @@ namespace LLI.Controllers
                 {
                     var hashedPassword = BCrypt.Net.BCrypt.HashPassword(model.password);
 
-                    var user = new User
-                    {
-                        username = model.username,
-                        password = hashedPassword
-                    };
+                    //var user = new User
+                    //{
+                    //    username = model.username,
+                    //    password = hashedPassword
+                    //};
+                    model.password = hashedPassword;
 
                     _context.Users.Add(model); // Add the user object here
                     _context.SaveChanges();
@@ -88,13 +89,17 @@ namespace LLI.Controllers
             if (ModelState.IsValid)
             {
                 var user = _context.Users.FirstOrDefault(u => u.username == model.username);
-                if (user != null && user.password == model.password)
+
+
+                bool isValidPassword = BCrypt.Net.BCrypt.Verify(model.password, user.password);
+
+                if (isValidPassword)
                 {
                     var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, user.username),
-                
-            };
+                    {
+                    new Claim(ClaimTypes.Name, user.username),
+
+                    };
                     var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                     var authProperties = new AuthenticationProperties
                     {
