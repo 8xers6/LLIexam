@@ -53,7 +53,7 @@ namespace LLI.Controllers
                         password = hashedPassword
                     };
 
-                    _context.Users.Add(model); 
+                    _context.Users.Add(model); // Add the user object here
                     _context.SaveChanges();
 
                     TempData["SuccessMessage"] = "Registration successful! Please log in.";
@@ -64,6 +64,7 @@ namespace LLI.Controllers
 
             return View(model);
         }
+
 
 
 
